@@ -1,0 +1,157 @@
+<div class="board-container" [class.dragging]="isDragging">
+    <header class="board-header">
+      <h1>Ticket Board</h1>
+      <button class="btn btn-primary" (click)="toggleTicketForm()">
+        {{ showTicketForm ? 'Close Form' : 'Create Ticket' }}
+      </button>
+    </header>
+    
+    <!-- Popup Overlay -->
+    <div class="popup-overlay" *ngIf="showTicketForm" (click)="closePopupOnOverlayClick($event)">
+      <div class="popup-content">
+        <div class="popup-header">
+          <h2>Create New Ticket</h2>
+          <button class="btn-close" (click)="toggleTicketForm()">×</button>
+        </div>
+        <app-ticket-form (ticketSubmit)="onTicketSubmit($event)"></app-ticket-form>
+      </div>
+    </div>
+
+    <div class="board" cdkDropListGroup >
+      <div *ngFor="let column of boardColumns" class="board-column" [class.blur-column]="isDragging">
+        <h2>{{ column.label }}</h2>
+        <div
+          cdkDropList
+          [cdkDropListData]="column.tickets"
+          class="ticket-list"
+          (cdkDropListDropped)="drop($event)"
+          [id]="column.status"
+        >`
+          <div *ngFor="let ticket of column.tickets" class="ticket-card" cdkDrag>
+            <div class="ticket-wrap">
+              <div class="ticket">
+            <h3>{{ ticket.title }}</h3>
+            <p>{{ ticket.description }}</p>
+            <div class="ticket-meta">
+              <span [class]="'priority-' + ticket.priority.toLowerCase()">{{ ticket.priority }}</span>
+              <span class="assignee">{{ ticket.assignee }}</span>
+            </div>
+          </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- <div class="board">
+      <div class="board-column" [class.blur-column]="isDragging && dragTarget !== 'TODO'">
+        <h2>To Do</h2>
+        <div
+          cdkDropList
+          #todoList="cdkDropList"
+          [cdkDropListData]="todoTickets"
+          [cdkDropListConnectedTo]="[inProgressList, doneList]"
+          class="ticket-list"
+          (cdkDropListDropped)="drop($event)"
+          (cdkDropListEntered)="dragTarget = 'TODO'"
+        >
+        {{dragTarget}}
+          <div
+            class="ticket-card"
+            *ngFor="let ticket of todoTickets"
+            cdkDrag
+            (cdkDragStarted)="onDragStart($event)"
+            (cdkDragEnded)="onDragEnd()"
+          >
+            <div class="ticket-drag-preview" *cdkDragPreview>
+              <h3>{{ ticket.title }}</h3>
+              <p>Moving to: {{ dragTarget }}</p>
+            </div>
+            <h3>{{ ticket.title }}</h3>
+            <p>{{ ticket.description }}</p>
+            <div class="ticket-meta">
+              <span [class]="'priority-' + ticket.priority.toLowerCase()">
+                {{ ticket.priority }}
+              </span>
+              <span class="assignee">{{ ticket.assignee }}</span>
+            </div>
+            <button class="btn btn-danger" (click)="deleteTicket(ticket.id)">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="board-column" [class.blur-column]="isDragging && dragTarget !== 'IN_PROGRESS'">
+        <h2>In Progress</h2>
+        <div
+          cdkDropList
+          #inProgressList="cdkDropList"
+          [cdkDropListData]="inProgressTickets"
+          [cdkDropListConnectedTo]="[todoList, doneList]"
+          class="ticket-list"
+          (cdkDropListDropped)="drop($event)"
+          (cdkDropListEntered)="dragTarget = 'IN_PROGRESS'"
+        >
+        {{dragTarget}}
+          <div
+            class="ticket-card"
+            *ngFor="let ticket of inProgressTickets"
+            cdkDrag
+            (cdkDragStarted)="onDragStart($event)"
+            (cdkDragEnded)="onDragEnd()"
+          >
+            <div class="ticket-drag-preview" *cdkDragPreview>
+              <h3>{{ ticket.title }}</h3>
+              <p>Moving to: {{ dragTarget }}</p>
+            </div>
+            <h3>{{ ticket.title }}</h3>
+            <p>{{ ticket.description }}</p>
+            <div class="ticket-meta">
+              <span [class]="'priority-' + ticket.priority.toLowerCase()">
+                {{ ticket.priority }}
+              </span>
+              <span class="assignee">{{ ticket.assignee }}</span>
+            </div>
+            <button class="btn btn-danger" (click)="deleteTicket(ticket.id)">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="board-column" [class.blur-column]="isDragging && dragTarget !== 'DONE'">
+        <h2>Done</h2>
+        <div
+          cdkDropList
+          #doneList="cdkDropList"
+          [cdkDropListData]="doneTickets"
+          [cdkDropListConnectedTo]="[todoList, inProgressList]"
+          class="ticket-list"
+          (cdkDropListDropped)="drop($event)"
+          (cdkDropListEntered)="dragTarget = 'DONE'"
+        >
+        {{dragTarget}}
+          <div
+            class="ticket-card"
+            *ngFor="let ticket of doneTickets"
+            cdkDrag
+            (cdkDragStarted)="onDragStart($event)"
+            (cdkDragEnded)="onDragEnd()"
+          >
+            <div class="ticket-drag-preview" *cdkDragPreview>
+              <h3>{{ ticket.title }}</h3>
+              <p>Moving to: {{ dragTarget }}</p>
+            </div>
+            <h3>{{ ticket.title }}</h3>
+            <p>{{ ticket.description }}</p>
+            <div class="ticket-meta">
+              <span [class]="'priority-' + ticket.priority.toLowerCase()">
+                {{ ticket.priority }}
+              </span>
+              <span class="assignee">{{ ticket.assignee }}</span>
+            </div>
+            <button class="btn btn-danger" (click)="deleteTicket(ticket.id)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div> -->
+  </div>
